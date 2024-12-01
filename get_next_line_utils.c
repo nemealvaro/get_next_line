@@ -6,11 +6,9 @@
 /*   By: aneme <aneme@student.42madrid.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 00:35:47 by aneme             #+#    #+#             */
-/*   Updated: 2024/11/26 00:36:07 by aneme            ###   ########.fr       */
+/*   Updated: 2024/12/01 15:01:26 by aneme            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #include "get_next_line.h"
 
@@ -43,7 +41,7 @@ char	*ft_strjoin(char *dst, char *src)
 	j = -1;
 	result = malloc((ft_strlen(dst) + ft_strlen(src) + 1) * sizeof(char));
 	if (!result)
-		return (ft_freeall(&dst));
+		return (ft_free(&dst));
 	while (dst[++i])
 		result[i] = dst[i];
 	while (src[++j])

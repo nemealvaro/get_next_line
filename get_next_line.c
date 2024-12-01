@@ -6,15 +6,13 @@
 /*   By: aneme <aneme@student.42madrid.com>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 00:35:58 by aneme             #+#    #+#             */
-/*   Updated: 2024/11/26 00:36:06 by aneme            ###   ########.fr       */
+/*   Updated: 2024/12/01 15:20:27 by aneme            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
-
 #include "get_next_line.h"
 
-char	*ft_freeall(char **s)
+char	*ft_free(char **s)
 {
 	free(*s);
 	*s = NULL;
@@ -40,8 +38,8 @@ char	*ft_get_line(char *s)
 char	*ft_cleanstr(char *s)
 
 {
-	int		i;
-	char	*newstr;
+	int i;
+	char *newstr;
 
 	i = 0;
 	while (s[i] && s[i] != '\n')
@@ -49,7 +47,7 @@ char	*ft_cleanstr(char *s)
 	if (s[i] == '\n')
 		i++;
 	if (s[i] == '\0')
-		return (ft_freeall(&s));
+		return (ft_free(&s));
 	newstr = ft_substr(s, i, ft_strlen(s) - i);
 	free(s);
 	return (newstr);
@@ -65,13 +63,13 @@ char	*ft_readbuffer(int fd, char *s)
 	{
 		buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
 		if (!buffer)
-			return (ft_freeall(&s));
+			return (ft_free(&s));
 		bytes = read(fd, buffer, BUFFER_SIZE);
 		if (bytes < 1)
 		{
 			free(buffer);
 			if (bytes < 0)
-				return (ft_freeall(&s));
+				return (ft_free(&s));
 			return (s);
 		}
 		buffer[bytes] = '\0';
@@ -93,62 +91,39 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = ft_get_line(str);
 	if (!line)
-		return (ft_freeall(&str));
+		return (ft_free(&str));
 	str = ft_cleanstr(str);
 	return (line);
 }
 
-/*int	main(void)
+int main(int argc, char **argv)
 {
-	int fd = open("giant_line_nl.txt", O_RDONLY);
-	char *line;
+    int     fd;
+    char    *line;
+	size_t	count;
 
-	line = get_next_line(fd);
-	printf("1%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("2%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("3%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("4%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("5%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("6%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("7%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("8%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("9%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("10%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("1%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("2%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("3%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("4%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("5%s\n", line);
-	free(line);
-	line = get_next_line(fd);
-	printf("6%s\n", line);
-	free(line);
-}*/
+    if (argc != 2)
+    {
+        printf("Uso: %s <nombre_archivo>\n", argv[0]);
+        return (1);
+    }
+    fd = open(argv[1], O_RDONLY);
+    if (fd < 0)
+    {
+        perror("Error al abrir el archivo");
+        return (1);
+    }
+	count = 1;
+    while ((line = get_next_line(fd)) != NULL)
+    {
+        printf("%li%s\n", count, line);
+        free(line);
+		count++;
+    }
+    if (close(fd) < 0)
+    {
+        perror("Error al cerrar el archivo");
+        return (1);
+    }
+    return (0);
+}
